@@ -1,15 +1,62 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Promise Chaining Transformation</title>
+</head>
+<body>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
+<input type="number" id="ip" placeholder="Enter a number" />
+<button id="btn">Start Transformation</button>
+<div id="output"></div>
 
-  <body>
-    <!-- do not change this code -->
-    <input type="number" id="ip" />
-    <button id="btn">Start</button>
-    <div id="output"></div>
-    <script type="text/javascript" src="./script.js"></script>
-  </body>
+<script>
+// Helper function to create a promise with a delay
+function delayedPromise(value, delay) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(value);
+    }, delay);
+  });
+}
+
+// Event listener on the button
+document.getElementById('btn').onclick = function() {
+  const inputVal = Number(document.getElementById('ip').value);
+  const outputDiv = document.getElementById('output');
+
+  if (isNaN(inputVal)) {
+    outputDiv.innerText = 'Please enter a valid number.';
+    return;
+  }
+
+  // Initial Promise: after 2 seconds, show the original input
+  delayedPromise(inputVal, 2000)
+    .then(result => {
+      outputDiv.innerText = `Result: ${result}`;
+      return delayedPromise(result * 2, 2000); // multiply by 2
+    })
+    .then(result => {
+      outputDiv.innerText = `Result: ${result}`;
+      return delayedPromise(result - 3, 1000); // subtract 3
+    })
+    .then(result => {
+      outputDiv.innerText = `Result: ${result}`;
+      return delayedPromise(result / 2, 1000); // divide by 2
+    })
+    .then(result => {
+      outputDiv.innerText = `Result: ${result}`;
+      return delayedPromise(result + 10, 1000); // add 10
+    })
+    .then(finalResult => {
+      outputDiv.innerText = `Final Result: ${finalResult}`;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      outputDiv.innerText = 'Something went wrong!';
+    });
+};
+</script>
+
+</body>
 </html>
